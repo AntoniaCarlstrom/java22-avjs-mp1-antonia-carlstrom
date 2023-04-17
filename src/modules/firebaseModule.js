@@ -3,27 +3,25 @@ async function getFirebase() {
     const url = 'https://highscore-f90ba-default-rtdb.europe-west1.firebasedatabase.app/highscores.json';
     const response = await fetch(url);
     const data = await response.json();
-    console.log(data);
+    // console.log(data);
 
     //Sortera array
     const jsonArray = Object.values(data);
     jsonArray.sort((a, b) => a.score - b.score);
     jsonArray.reverse();
-    console.log(jsonArray);
+    // console.log(jsonArray);
 
-    jsonArray.splice(5);
-    console.log(jsonArray);
+    const finalArray = jsonArray.slice(0, 5);
 
     const highscoreList = document.querySelector('#high-score');
-    for (const key in jsonArray) {
-      const user = jsonArray[key];
+    for (const key in finalArray) {
+      const user = finalArray[key];
       const highScore = document.createElement('ul');
       highScore.classList.add('highscore-list');
 
       const userName = document.createElement('li');
       userName.textContent = "Name: " + user.name;
       highScore.appendChild(userName);
-
 
       const score = document.createElement('li');
       score.textContent = "Score: " + user.score;
@@ -37,16 +35,16 @@ async function getFirebase() {
   }
 }
 
-async function postFirebase() {
+async function postFirebase(playerNameFromInput, totalScorePlayer) {
   const url = `https://highscore-f90ba-default-rtdb.europe-west1.firebasedatabase.app/highscores.json`;
   // const urlMod = newHighscoreIndex;
   // console.log(newHighscoreIndex);
-  const userInput = document.getElementById('user').value;
-  const userInputScore = document.getElementById('score').value;
+  // const userInput = document.getElementById('user').value;
+  // const userInputScore = document.getElementById('score').value;
 
   const newHighscore = {
-    name: userInput,
-    score: userInputScore,
+    name: playerNameFromInput,
+    score: totalScorePlayer
   };
 
   const option = {
@@ -60,7 +58,7 @@ async function postFirebase() {
   const response = await fetch(url, option);
   const data = await response.json();
 
-  console.log(data);
+
 }
 
 

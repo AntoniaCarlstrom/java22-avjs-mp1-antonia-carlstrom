@@ -1,0 +1,144 @@
+@import url("https://fonts.googleapis.com/css?family=Press+Start+2P&display=swap");
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: "Press Start 2P", sans-serif;
+  color: #eee;
+  background-color: #222;
+  height: 100vh;
+}
+
+form {
+  margin-top: 1rem;
+  margin-bottom: 1rem;
+}
+
+h1 {
+  margin-bottom: 2rem;
+}
+
+.box {
+  border: 3px solid black;
+  width: 25%;
+  height: 20rem;
+  padding: 1rem;
+  margin: 2%;
+  margin-left: 2rem;
+}
+
+.btn {
+  border: none;
+  background-color: #eee;
+  color: #222;
+  font-size: 1rem;
+  font-family: inherit;
+  padding: 1rem 1rem;
+  cursor: pointer;
+  margin-top: 1rem;
+  visibility: hidden;
+}
+
+.btn:hover {
+  background-color: rgb(165, 165, 165);
+}
+
+.choice {
+  padding: 0px;
+  margin-top: 10px;
+  margin-left: 0px;
+  height: 100px;
+  text-align: center;
+}
+
+.choiceBtn {
+  border: none;
+  color: #222;
+  font-size: 1rem;
+  text-shadow: 2px 2px 5px #fff;
+  font-family: inherit;
+  padding: 0rem 0rem;
+  cursor: pointer;
+  visibility: visible;
+}
+
+.choiceBtn#rock {
+  background: url(../media/rock.png) no-repeat;
+  width: 100px;
+  height: 100px;
+}
+
+.choiceBtn#scissors {
+  background: url(../media/sci.png) no-repeat;
+  width: 100px;
+  height: 100px;
+}
+
+.choiceBtn#bag {
+  background: url(../media/bag.png) no-repeat;
+  width: 100px;
+  height: 100px;
+}
+
+.choiceBtn:hover {
+  background-color: rgb(165, 165, 165);
+  opacity: 0.6;
+}
+
+.computerName {
+  margin-bottom: 3rem;
+}
+
+.container {
+  border: 3px solid black;
+  width: 100%;
+  padding: 0rem;
+  margin: 0rem;
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.hidden {
+  display: none;
+}
+
+.imgIcon {
+  width: 5rem;
+}
+
+.overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(3px);
+  z-index: 5;
+}
+
+.overlayResult {
+  position: absolute;
+  top: 40%;
+  left: 30%;
+  text-align: center;
+}
+
+#header {
+  width: 94%;
+  height: 100px;
+  margin-top: 40px;
+  margin-bottom: 10px;
+  text-align: center;
+}
+
+#footer {
+  width: 94%;
+  margin-top: 10px;
+  margin-bottom: 10px;
+  text-align: center;
+}
