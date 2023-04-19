@@ -1,4 +1,4 @@
 package-lock.json
 node_modules
-parcel-cache
+.parcel-cache
 dist
