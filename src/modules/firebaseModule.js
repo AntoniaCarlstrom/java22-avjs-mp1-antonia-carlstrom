@@ -45,8 +45,12 @@ async function getFirebase() {
 
 // Funktion för att lägga in nya highscore-listan i Firebase.
 async function patchToFirebase(finalArray) {
-
+  getFirebase()
+    .then(function (returnedValueFromGetFirebase) {
+      finalArray = returnedValueFromGetFirebase;
+    });
   //Sorterar arrayen med nya objektet i
+  const finalArraySorted = [];
   finalArraySorted = Object.values(finalArray);
   finalArraySorted.sort((a, b) => a.score - b.score);
 
