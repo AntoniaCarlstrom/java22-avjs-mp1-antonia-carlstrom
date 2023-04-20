@@ -1,4 +1,4 @@
-import { getFirebase, patchToFirebase } from "./modules/firebaseModule.js";
+import { getFirebase, postFirebase, patchToFirebase } from "./modules/firebaseModule.js";
 
 const playerText = document.querySelector(".playerText");
 const playerName = document.querySelector(".playerName");
@@ -8,32 +8,37 @@ const resultText2 = document.querySelector(".resultText2");
 const choiceBtns = document.querySelectorAll(".choiceBtn");
 const nameButton = document.querySelector(".nameBtn");
 const scorePlayerDiv = document.querySelector(".scorePlayerDiv");
+const scoreComputerDiv = document.querySelector(".scoreComputerDiv");
 const form = document.querySelector("form");
 const overlay = document.querySelector(".overlay");
 
 let player;
 let computer;
+let result;
 let scorePlayer = 0;
 let scoreComputer = 0;
+let totalScorePlayer = 0;
 let playerNameFromInput = "";
 let nameInput;
 let finalArray = [];
 
-//Hämtar highscore-listan från Firebase
 getFirebase()
-  .then(function (returnedValueFromGetFirebase) {
+  .then( function(returnedValueFromGetFirebase){
+    console.log(returnedValueFromGetFirebase);
     finalArray = returnedValueFromGetFirebase;
   });
-//Sätter spelarens namn från input
+
 nameButton.addEventListener("click", (event) => {
   event.preventDefault();
   nameInput = document.querySelector("form input");
   playerNameFromInput = nameInput.value;
   playerName.textContent = playerNameFromInput + ":";
   form.style.visibility = "hidden";
+  console.log("PlayerNameFromInput: " + playerNameFromInput);
 });
 
-//Lägger till eventlisteners till knapparna
+
+
 choiceBtns.forEach((button) =>
 
   button.addEventListener("click", (event) => {
@@ -43,38 +48,47 @@ choiceBtns.forEach((button) =>
     playerText.textContent = `${player}`;
     computerText.textContent = `${computer}`;
     resultText.textContent = checkWinner();
-    //Kolla av textinnehållet på resultText för att se om spelaren vann.
+
     if (resultText.textContent == "You lose!") {
       scoreComputer++;
       resultText2.textContent = `Game over! Computer wins!`;
       overlay.classList.remove("hidden");
-      //Om datorn får poäng - skapa objekt med spelarens namn + score i.
+      console.log("till newHighscore ", playerNameFromInput, scorePlayer);
+      console.log('finalArray', finalArray);
       let newHighscore = {
         name: playerNameFromInput,
         score: scorePlayer
       }
-
+      console.log("Objektet newHighscore ", newHighscore);
       setTimeout(resetGame, 1000);
+if (scorePlayer >  finalArray[4].score)
+      finalArray.push(newHighscore);
 
-      //Kollar om spelarens score är högre än lägsta scoren från databasen
-      if (scorePlayer > finalArray[4].score)
-        finalArray.push(newHighscore);
-
-      //Lägger till scoren i databasen
+      console.log("finalArray efter push ", finalArray);
       patchToFirebase(finalArray);
+      
 
-      //Om spelaren får poäng ökas scoren på
     } else if (resultText.textContent == "You win!") {
       scorePlayer++;
+      
       resultText2.textContent = `Player wins! ${scorePlayer} points`;
+      
+      //setTimeout(resetGame, 1000);
     }
     scorePlayerDiv.textContent = `Score: ${scorePlayer}`;
+    scoreComputerDiv.textContent = `Score: ${scoreComputer}`;
+
+    
 
   })
 );
 
+// restartButton.addEventListener("click", () => {
+//   location.reload();
 
-//Datorns omgång bestäms av random nummer mellan 1-3
+// });
+
+
 function computerTurn() {
   const randomNumber = Math.floor(Math.random() * 3) + 1;
 
@@ -90,8 +104,6 @@ function computerTurn() {
       break;
   }
 }
-
-//spelarens och datorns val checkas av mot varandra
 function checkWinner() {
   if (player == computer) {
     return "Oavgjort!";
@@ -104,15 +116,18 @@ function checkWinner() {
   }
 }
 
-//Resetta spelet efter varje omgång = nollställer och hämtar från databasen
 function resetGame() {
   scorePlayer = 0;
   scoreComputer = 0;
+  //playerText.textContent = "";
+  //computerText.textContent = "";
   resultText.textContent = "";
   resultText2.textContent = "";
+  // getFirebase();
   overlay.classList.add("hidden");
   form.classList.remove('hidden');
   getFirebase();
+
 }
 
 
