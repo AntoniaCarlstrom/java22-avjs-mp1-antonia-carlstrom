@@ -1,4 +1,4 @@
-import { getFirebase, postFirebase, patchToFirebase } from "./modules/firebaseModule.js";
+import { getFirebase, patchToFirebase } from "./modules/firebaseModule.js";
 
 const playerText = document.querySelector(".playerText");
 const playerName = document.querySelector(".playerName");
@@ -14,31 +14,28 @@ const overlay = document.querySelector(".overlay");
 
 let player;
 let computer;
-let result;
 let scorePlayer = 0;
 let scoreComputer = 0;
-let totalScorePlayer = 0;
 let playerNameFromInput = "";
 let nameInput;
 let finalArray = [];
 
+
 getFirebase()
-  .then( function(returnedValueFromGetFirebase){
-    console.log(returnedValueFromGetFirebase);
+  .then(function (returnedValueFromGetFirebase) {
     finalArray = returnedValueFromGetFirebase;
   });
-
+//Sätter spelarens namn
 nameButton.addEventListener("click", (event) => {
   event.preventDefault();
   nameInput = document.querySelector("form input");
   playerNameFromInput = nameInput.value;
   playerName.textContent = playerNameFromInput + ":";
   form.style.visibility = "hidden";
-  console.log("PlayerNameFromInput: " + playerNameFromInput);
 });
 
 
-
+//Lägger till eventlisteners
 choiceBtns.forEach((button) =>
 
   button.addEventListener("click", (event) => {
@@ -48,47 +45,42 @@ choiceBtns.forEach((button) =>
     playerText.textContent = `${player}`;
     computerText.textContent = `${computer}`;
     resultText.textContent = checkWinner();
-
+    //Spelet 
     if (resultText.textContent == "You lose!") {
       scoreComputer++;
       resultText2.textContent = `Game over! Computer wins!`;
       overlay.classList.remove("hidden");
-      console.log("till newHighscore ", playerNameFromInput, scorePlayer);
-      console.log('finalArray', finalArray);
+      //Skapar objekt med ny highscore med namn från input och poäng
       let newHighscore = {
         name: playerNameFromInput,
         score: scorePlayer
       }
-      console.log("Objektet newHighscore ", newHighscore);
+      //Resettar spelet efter 1 sekund
       setTimeout(resetGame, 1000);
-if (scorePlayer >  finalArray[4].score)
-      finalArray.push(newHighscore);
+      //Kollar om ny highscore är högre än sista platsen på listan, och lägger i så fall till den i arrayen
+      if (scorePlayer > finalArray[4].score)
+        finalArray.push(newHighscore);
 
-      console.log("finalArray efter push ", finalArray);
+      //Arrayen patchas till firebase
       patchToFirebase(finalArray);
-      
+
 
     } else if (resultText.textContent == "You win!") {
       scorePlayer++;
-      
+
       resultText2.textContent = `Player wins! ${scorePlayer} points`;
-      
-      //setTimeout(resetGame, 1000);
+
     }
+    //Ändrar texten score för player och dator
     scorePlayerDiv.textContent = `Score: ${scorePlayer}`;
     scoreComputerDiv.textContent = `Score: ${scoreComputer}`;
 
-    
+
 
   })
 );
 
-// restartButton.addEventListener("click", () => {
-//   location.reload();
-
-// });
-
-
+//Genererar datorns omgång
 function computerTurn() {
   const randomNumber = Math.floor(Math.random() * 3) + 1;
 
@@ -104,6 +96,7 @@ function computerTurn() {
       break;
   }
 }
+//Kollar vem som vann
 function checkWinner() {
   if (player == computer) {
     return "Oavgjort!";
@@ -115,15 +108,13 @@ function checkWinner() {
     return player == "STEN" ? "You lose!" : "You win!";
   }
 }
+//Resettar spelet om datorn vunnit
 
 function resetGame() {
   scorePlayer = 0;
   scoreComputer = 0;
-  //playerText.textContent = "";
-  //computerText.textContent = "";
   resultText.textContent = "";
   resultText2.textContent = "";
-  // getFirebase();
   overlay.classList.add("hidden");
   form.classList.remove('hidden');
   getFirebase();

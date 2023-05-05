@@ -1,20 +1,19 @@
-
+//Hämtar highscore-listan från firebase
 async function getFirebase() {
   try {
     const url = 'https://highscore-f90ba-default-rtdb.europe-west1.firebasedatabase.app/highscores.json';
     const response = await fetch(url);
     const data = await response.json();
-    console.log("data: ", data);
+
     const highscoreDiv = document.getElementById('high-score');
     highscoreDiv.innerHTML = "";
-    //Sortera array
+    //Sorterar arrayen
     const jsonArray = Object.values(data);
     jsonArray.sort((a, b) => a.score - b.score);
     jsonArray.reverse();
-
+    //Behåller de 5 första positionerna
     const finalArray = jsonArray.slice(0, 5);
-
-    console.log("finalArray: ", finalArray);
+    //Visar highscore-listan på sidan
     const highscoreList = document.querySelector('#high-score');
 
     for (const key in finalArray) {
@@ -42,46 +41,17 @@ async function getFirebase() {
 
 }
 
-/*
-async function postFirebase(playerNameFromInput, totalScorePlayer) {
-  const url = `https://highscore-f90ba-default-rtdb.europe-west1.firebasedatabase.app/highscores.json`;
-  // const urlMod = newHighscoreIndex;
-  // console.log(newHighscoreIndex);
-  // const userInput = document.getElementById('user').value;
-  // const userInputScore = document.getElementById('score').value;
-
-  const newHighscore = {
-    name: playerNameFromInput,
-    score: totalScorePlayer
-  };
-
-  const option = {
-    method: 'POST',
-    body: JSON.stringify(newHighscore),
-    headers: {
-      'Content-type': 'application/json; charset=UTF-8',
-    },
-  };
-
-  const response = await fetch(url, option);
-  const data = await response.json();
-
-
-}
-*/
-
-// PATCH
+//Funktion för att skicka ny highscore till firebase
 async function patchToFirebase(finalArray) {
-
-  finalArraySorted = Object.values(finalArray);
+  //Arrayen sorteras och kapas av
+  let finalArraySorted = Object.values(finalArray);
   finalArraySorted.sort((a, b) => a.score - b.score);
   finalArraySorted.reverse();
 
-  finalArraySliced = finalArraySorted.slice(0,5);
-
-  console.log(finalArraySliced);
+  let finalArraySliced = finalArraySorted.slice(0, 5);
 
 
+  //Skickar upp arrayen med objekten till sin rätta plats i firebase
   for (let i = 0; i < finalArraySliced.length; i++) {
     const url = `https://highscore-f90ba-default-rtdb.europe-west1.firebasedatabase.app/highscores/${i}.json`;
 
@@ -90,7 +60,6 @@ async function patchToFirebase(finalArray) {
       name: finalArraySliced[i].name,
       score: finalArraySliced[i].score
     }
-//console.log(newScore);
 
     const options = {
       method: 'PATCH',
@@ -102,8 +71,7 @@ async function patchToFirebase(finalArray) {
 
     const response = await fetch(url, options);
     const data = await response.json();
-    // console.log(finalArray);
-    // console.log(url);
+
   }
 }
 
